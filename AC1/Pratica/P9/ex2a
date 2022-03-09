@@ -1,0 +1,22 @@
+	.data
+k1:	.float 5.0
+k2:	.float 9.0
+k3:	.float 32.0
+	.text
+	.globl f2c
+	
+f2c:	
+	la $t0 , k1
+	l.d $f2 , 0($t0)
+	
+	la $t0 , k2
+	l.d $f4 , 0($t0)
+	
+	la $t0 , k3
+	l.d $f6 , 0($t0)
+	
+	sub.d $f12 , $f12 , $f6
+	div.d $f2 , $f2 , $f4
+	mul.d $f0 , $f2 , $f12
+	
+	jr $ra

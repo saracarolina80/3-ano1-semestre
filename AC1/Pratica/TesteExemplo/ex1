@@ -1,0 +1,86 @@
+#define SIZE 8
+# void main(void) { 
+# 	static int val[SIZE] = {8, 4, 15, -1987, 327, -9, 27, 16}; 
+#	 int i, v; 
+#	 i = 0; 
+#	 do { 
+#		 v = val[i]; 
+#		 val[i] = val[i+SIZE/2]; 
+#		 val[i+SIZE/2] = v; 
+#	 } while(++i < SIZE / 2); 
+#	 print_string("Result is: "); 
+#	 i = 0; 
+#	 do { 
+#		print_int10( val[i++] ); 
+#		 print_char(','); 
+#	} while(i < SIZE); 
+# }
+
+# Mapa de Registos
+# $t0 - i
+# $t1 - v
+# $t2 - val
+# $t3 - val[i]
+# $t4 - SIZE
+# $t6 - val[i + SIZE/2]
+
+	.data
+	.eqv SIZE , 8
+str1:	.asciiz "Result is: "
+val:	.word 8, 4, 15, -1987, 327, -9, 27, 16	# static int val[SIZE] = {8, 4, 15, -1987, 327, -9, 27, 16}; 
+	.eqv print_string , 4
+	.eqv print_int10 , 1
+	.eqv print_char , 11
+	.text
+	.globl main
+
+main:	li $t0 , 0 	# i = 0
+
+do:	la $t2 , val	# val = &str1[0]
+	addu $t5 , $t2 , $t0 	#  $t5 = &val[i]
+	lb $t3 , 0($t5) # $t3 = val[i]
+	
+	move $t3 , $t1 # v = val[i]
+	
+	li $t4 , SIZE
+	div $t4 , $t4 , 2 # SIZE/2
+	
+	add $t7 , $t4 , $t0
+	
+	addu $t5 , $t2 , $t7
+	lb $t6 , 0($t5)		
+	
+	move $t6 , $t3    #  val[i] = val[i+SIZE/2]; 
+	
+	move $3 , $t6	# val[i+SIZE/2] = v
+
+while:	
+	addi $t0 , $t0 , 1
+	bge $t0 , $t4 , do
+	
+	li $v0 , print_string
+	la $a0 , str1
+	syscall
+	
+	li $t0 , 0
+do1:	
+	addi $t0 , $t0 , 1
+	la $t2 , val	# val = &str1[0]
+	addu $t5 , $t2 , $t0 	#  $t5 = &val[i]
+	lb $t3 , 0($t5) # $t3 = val[i]
+	
+	move $t3 , $a0
+	li $v0 , print_int10
+	syscall
+	
+	li $a0 , ';'
+	li $v0 , print_char
+	syscall
+
+while2:	bge $t0 , $t4 , do
+	
+	jr $ra
+	
+	
+	
+	

@@ -1,0 +1,22 @@
+
+	.data
+buf:	.space 33
+	.eqv print_string , 4
+	.text
+	.globl print_int_ac1
+	
+print_int_ac1:	
+	addiu $sp , $sp , -4
+	sw $ra , 0($sp)
+	
+	la $a2 , buf
+	jal itoa 
+	
+	move $a0 , $v0
+	li $v0 , print_string
+	syscall
+	
+	lw $ra , 0($sp)
+	addiu $sp , $sp , 4
+	
+	jr $ra

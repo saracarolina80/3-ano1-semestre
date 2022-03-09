@@ -1,0 +1,20 @@
+$t0 - p
+
+
+	la $t0 , str
+	li $t1 , SIZE
+	sll $t1 , $t1 , 2	# SIZE * 4	
+	addu $t1 , $t1 , $t0 	# lista + SIZE
+	
+for:	bgeu $t0 , $t1 , endF
+	
+	lw $t2 , 0($t1)
+
+	move $a0 , $t2
+	li $v0 , print_int10
+	syscall
+	
+	addiu $t0 , $t0 , 1
+	
+	j for
+

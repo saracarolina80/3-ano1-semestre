@@ -1,0 +1,23 @@
+Implementação de sub-rotinas
+
+
+--- Subrotina chamadora:
+	- Antes de Chamar:
+	. Passa os parâmetros: 0s 4 primeiros nos registos $a0,..,$a3 e os restantes na stack
+	. Executa a instrução 'jal'	
+- Após o Regresso:
+	. Usa o valor de retorno que está em $v0
+
+
+-- Subrotina chamada:
+	- No Inicio:
+		. Salvaguarda na stack os registos $s0 a $s7 que pretende utilizar
+		. No caso de também ser chamadora, salvaguarda o registo $ra
+	- No Fim:
+		. Coloca o valor de retorno em $v0 
+		. Restaura os valores dos registos $s0 a $s7 que salvaguardou no inicio
+		. Restaura o $ra
+		. Retorna através 'jr $ra'
+
+
+-- Subrotina Terminal : Não devem usar registos $sx
